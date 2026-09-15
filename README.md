@@ -1,6 +1,6 @@
 # Biblioteca Personal - Frontend (React + Vite)
 
-Aplicación web Full-Stack desarrollada para la asignatura **Herramientas Avanzadas para el Desarrollo de Aplicaciones (102HAD1)** - Ciclo II-2026.
+Aplicación web Full-Stack desarrollada para la asignatura **Herramientas Avanzadas para el Desarrollo de Aplicaciones ** .
 
 ## Integrantes
 * María Celeste Hernández Aguilar (#0700923)
