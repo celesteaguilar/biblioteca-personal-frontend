@@ -1,121 +1,94 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
+import { useState, useEffect } from 'react'
+import { fetchMock } from './services/mock'
+import ListaLibros from './components/ListaLibros'
+import FiltroLibros from './components/FiltroLibros'
+import FormularioLibro from './components/FormularioLibro'
+import DetalleLibro from './components/DetalleLibro'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [libros, setLibros] = useState([])
+  const [cargando, setCargando] = useState(true)
+  const [error, setError] = useState(null)
+
+  const [filtroEstado, setFiltroEstado] = useState('todos')
+  const [textoBusqueda, setTextoBusqueda] = useState('')
+  const [idSeleccionado, setIdSeleccionado] = useState(null)
+
+  useEffect(() => {
+    fetchMock('libros')
+      .then((datos) => {
+        setLibros(datos)
+        setCargando(false)
+      })
+      .catch((err) => {
+        setError(err.message)
+        setCargando(false)
+      })
+  }, [])
+
+  function manejarToggleLeido(id) {
+    setLibros((prev) =>
+      prev.map((libro) =>
+        libro.id === id ? { ...libro, leido: !libro.leido } : libro
+      )
+    )
+  }
+
+  function manejarAgregarLibro(nuevoLibro) {
+    setLibros((prev) => [
+      ...prev,
+      { ...nuevoLibro, id: prev.length > 0 ? Math.max(...prev.map((l) => l.id)) + 1 : 1 },
+    ])
+  }
+
+  const librosFiltrados = libros.filter((libro) => {
+    const coincideEstado =
+      filtroEstado === 'todos' ||
+      (filtroEstado === 'leidos' && libro.leido) ||
+      (filtroEstado === 'pendientes' && !libro.leido)
+
+    const coincideBusqueda = libro.titulo
+      .toLowerCase()
+      .includes(textoBusqueda.toLowerCase())
+
+    return coincideEstado && coincideBusqueda
+  })
+
+  const libroSeleccionado = libros.find((libro) => libro.id === idSeleccionado)
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <div className="app">
+      <h1>Biblioteca Personal de Libros</h1>
+      <p>Proyecto integrador — Herramientas Avanzadas para el Desarrollo de Aplicaciones (102HAD1)</p>
 
-      <div className="ticks"></div>
+      {cargando && <p className="estado-carga">Cargando libros...</p>}
+      {error && <p className="estado-error">Ocurrió un error: {error}</p>}
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+      {!cargando && !error && (
+        <>
+          <FiltroLibros
+            filtroEstado={filtroEstado}
+            onCambiarEstado={setFiltroEstado}
+            textoBusqueda={textoBusqueda}
+            onCambiarBusqueda={setTextoBusqueda}
+          />
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+          <ListaLibros
+            libros={librosFiltrados}
+            onVerDetalle={setIdSeleccionado}
+            onToggleLeido={manejarToggleLeido}
+          />
+
+          <FormularioLibro onAgregarLibro={manejarAgregarLibro} />
+
+          <DetalleLibro
+            libro={libroSeleccionado}
+            onCerrar={() => setIdSeleccionado(null)}
+          />
+        </>
+      )}
+    </div>
   )
 }
 
