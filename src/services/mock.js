@@ -1,9 +1,14 @@
-// Datos ficticios del dominio de la biblioteca personal
+/// Datos ficticios del dominio de la biblioteca personal
 const bibliotecaData = {
   libros: [
     { id: 1, titulo: "Cien años de soledad", autor: "Gabriel García Márquez", leido: true },
     { id: 2, titulo: "1984", autor: "George Orwell", leido: false },
     { id: 3, titulo: "El Principito", autor: "Antoine de Saint-Exupéry", leido: true }
+  ],
+  autores: [
+    { id: 1, nombre: "Gabriel García Márquez", pais: "Colombia" },
+    { id: 2, nombre: "George Orwell", pais: "Reino Unido" },
+    { id: 3, nombre: "Antoine de Saint-Exupéry", pais: "Francia" }
   ]
 };
 
