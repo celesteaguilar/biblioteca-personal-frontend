@@ -3,7 +3,7 @@ export function filtrarLibros(libros, texto) {
   if (!q) return libros;
   return libros.filter(
     (l) =>
-      l.titulo.toLowerCase().includes(q) ||
-      l.autor.toLowerCase().includes(q)
+      (l.titulo || "").toLowerCase().includes(q) ||
+      (l.autor || "").toLowerCase().includes(q)
   );
 }

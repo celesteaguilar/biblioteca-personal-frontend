@@ -22,5 +22,5 @@ export function useFetch(fetchFn, recurso) {
     cargar();
   }, [cargar]);
 
-  return { data, loading, error, recargar: cargar };
+  return { data, setData, loading, error, recargar: cargar };
 }

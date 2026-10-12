@@ -1,31 +1,25 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { fetchMock } from './services/mock'
+import { useFetch } from './hooks/useFetch'
+import { filtrarLibros } from './utils/libros'
 import ListaLibros from './components/ListaLibros'
 import FiltroLibros from './components/FiltroLibros'
 import FormularioLibro from './components/FormularioLibro'
 import DetalleLibro from './components/DetalleLibro'
+import AutorList from './components/AutorList'
 import './App.css'
 
 function App() {
-  const [libros, setLibros] = useState([])
-  const [cargando, setCargando] = useState(true)
-  const [error, setError] = useState(null)
+  const {
+    data: libros,
+    setData: setLibros,
+    loading: cargando,
+    error,
+  } = useFetch(fetchMock, 'libros')
 
   const [filtroEstado, setFiltroEstado] = useState('todos')
   const [textoBusqueda, setTextoBusqueda] = useState('')
   const [idSeleccionado, setIdSeleccionado] = useState(null)
-
-  useEffect(() => {
-    fetchMock('libros')
-      .then((datos) => {
-        setLibros(datos)
-        setCargando(false)
-      })
-      .catch((err) => {
-        setError(err.message)
-        setCargando(false)
-      })
-  }, [])
 
   function manejarToggleLeido(id) {
     setLibros((prev) =>
@@ -42,17 +36,12 @@ function App() {
     ])
   }
 
-  const librosFiltrados = libros.filter((libro) => {
-    const coincideEstado =
+  const librosFiltrados = filtrarLibros(libros, textoBusqueda).filter((libro) => {
+    return (
       filtroEstado === 'todos' ||
       (filtroEstado === 'leidos' && libro.leido) ||
       (filtroEstado === 'pendientes' && !libro.leido)
-
-    const coincideBusqueda = libro.titulo
-      .toLowerCase()
-      .includes(textoBusqueda.toLowerCase())
-
-    return coincideEstado && coincideBusqueda
+    )
   })
 
   const libroSeleccionado = libros.find((libro) => libro.id === idSeleccionado)
@@ -86,10 +75,12 @@ function App() {
             libro={libroSeleccionado}
             onCerrar={() => setIdSeleccionado(null)}
           />
+
+          <AutorList />
         </>
       )}
     </div>
   )
 }
 
-export default App;
+export default App
