@@ -1,21 +1,24 @@
 import { useState } from 'react'
+import { useForm } from '../hooks/useForm'
 
 function FormularioLibro({ onAgregarLibro }) {
-  const [titulo, setTitulo] = useState('')
-  const [autor, setAutor] = useState('')
+  const { valores, handleChange, reset } = useForm({ titulo: '', autor: '' })
   const [error, setError] = useState('')
 
   function manejarEnvio(e) {
     e.preventDefault()
 
-    if (titulo.trim() === '' || autor.trim() === '') {
+    if (valores.titulo.trim() === '' || valores.autor.trim() === '') {
       setError('Título y autor son obligatorios.')
       return
     }
 
-    onAgregarLibro({ titulo: titulo.trim(), autor: autor.trim(), leido: false })
-    setTitulo('')
-    setAutor('')
+    onAgregarLibro({
+      titulo: valores.titulo.trim(),
+      autor: valores.autor.trim(),
+      leido: false,
+    })
+    reset()
     setError('')
   }
 
@@ -27,8 +30,9 @@ function FormularioLibro({ onAgregarLibro }) {
         Título
         <input
           type="text"
-          value={titulo}
-          onChange={(e) => setTitulo(e.target.value)}
+          name="titulo"
+          value={valores.titulo}
+          onChange={handleChange}
         />
       </label>
 
@@ -36,8 +40,9 @@ function FormularioLibro({ onAgregarLibro }) {
         Autor
         <input
           type="text"
-          value={autor}
-          onChange={(e) => setAutor(e.target.value)}
+          name="autor"
+          value={valores.autor}
+          onChange={handleChange}
         />
       </label>
 
