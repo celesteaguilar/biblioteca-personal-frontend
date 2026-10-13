@@ -82,10 +82,6 @@ Todo cambio entra a `main` mediante Pull Request revisado por otro integrante de
 * `FormularioLibro` ahora usa `useForm` en lugar de un `useState` por campo.
 * Se eliminaron los componentes duplicados `LibroList` y `LibroForm`, que habían quedado sin uso.
 
-### Backend
-
-La estructura de apps de Django se definió en el repositorio [biblioteca-personal-backend](https://github.com/celesteaguilar/biblioteca-personal-backend): `catalogo` (autores y libros) y `lectura` (seguimiento de lectura). Los modelos, serializers y endpoints se implementan en las sesiones 11 y 13.
-
 ### Flujo de trabajo en esta sesión
 
 * Ramas por funcionalidad: `feat/custom-hook-usefetch`, `feat/useform-formulario` y `chore/eliminar-duplicados`.
