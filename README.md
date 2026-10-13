@@ -19,7 +19,7 @@ npm install
 npm run dev
 ```
 
-Abrir `http://localhost:5173` en el navegador. El backend corre por separado en `http://127.0.0.1:8000` (ver el repositorio relacionado). Por ahora el frontend usa datos simulados con `fetchMock`; la conexión con la API real se hará en la Sesión 11.
+Abrir `http://localhost:5173` en el navegador. Por ahora el frontend usa datos simulados con `fetchMock`; la conexión con la API real se hará en la Sesión 11.
 
 ## Sesión 2 - Estructura Inicial
 
@@ -34,7 +34,7 @@ Abrir `http://localhost:5173` en el navegador. El backend corre por separado en 
 * `feature/<nombre>` o `feat/<nombre>`: Ramas creadas para desarrollar nuevas características o mejoras.
 * `fix/<nombre>`: Ramas para corrección de errores.
 * `docs/<nombre>`: Ramas para cambios en la documentación.
-* `chore/<nombre>`: Ramas para tareas de mantenimiento (por ejemplo, limpieza de archivos).
+* `chore/<nombre>`: Ramas para tareas de mantenimiento.
 
 ### Convención de Commits
 
@@ -44,8 +44,6 @@ Abrir `http://localhost:5173` en el navegador. El backend corre por separado en 
 * `refactor:` para reorganizar código sin cambiar su comportamiento.
 * `chore:` para tareas de mantenimiento.
 
-Todo cambio entra a `main` mediante Pull Request revisado por otro integrante del equipo.
-
 ## Sesión 5 - Eventos y Mock de API
 
 * Creación del archivo `services/mock.js` con la función `fetchMock(recurso)`.
@@ -54,36 +52,28 @@ Todo cambio entra a `main` mediante Pull Request revisado por otro integrante de
 ## Sesión 7 - Interfaz con Estado Local
 
 * Creación de componentes React: `ListaLibros`, `TarjetaLibro`, `FiltroLibros`, `FormularioLibro` y `DetalleLibro`.
-* Consumo de `fetchMock` para manejar estado funcional y datos de prueba (en la Sesión 9 este manejo se movió al custom hook `useFetch`).
+* Consumo de `fetchMock` para manejar estado funcional y datos de prueba (en la Sesión 9 este manejo pasó al custom hook `useFetch`).
 * Formulario controlado (`FormularioLibro`) para agregar libros nuevos, con validación básica de campos obligatorios.
 * Lista con filtrado (`FiltroLibros`): búsqueda por título y filtro por estado de lectura (todos / leídos / pendientes).
 * Pantalla de detalle (`DetalleLibro`) al seleccionar un libro de la lista.
 
-## Sesión 9 - Modularización Frontend / Backend
+## Sesión 9 - Modularización
 
-### Frontend
-
-**Custom hooks (`src/hooks/`)**
+### Custom hooks (`src/hooks/`)
 
 | Hook | Qué hace | Dónde se usa |
 |---|---|---|
 | `useFetch(fetchFn, recurso)` | Maneja los tres estados de una petición: cargando, datos y error. Devuelve `data`, `setData`, `loading`, `error` y `recargar`. | `App` y `AutorList` |
 | `useForm(valoresIniciales)` | Maneja formularios controlados. Devuelve `valores`, `handleChange`, `reset` y `setValores`. | `FormularioLibro` |
 
-**Utilidad (`src/utils/`)**
+### Utilidad (`src/utils/`)
 
 * `filtrarLibros(libros, texto)`: filtra la lista de libros por título o autor, sin distinguir mayúsculas. Se usa en `App` junto con el filtro por estado.
 
-**Otros cambios**
+### Otros cambios
 
 * Nuevo componente `AutorList`, que muestra la lista de autores y reutiliza `useFetch`.
 * Se agregó el recurso `autores` a `services/mock.js`.
 * `App` ahora obtiene los libros con `useFetch` en lugar de `useState` y `useEffect` manuales.
 * `FormularioLibro` ahora usa `useForm` en lugar de un `useState` por campo.
 * Se eliminaron los componentes duplicados `LibroList` y `LibroForm`, que habían quedado sin uso.
-
-### Flujo de trabajo en esta sesión
-
-* Ramas por funcionalidad: `feat/custom-hook-usefetch`, `feat/useform-formulario` y `chore/eliminar-duplicados`.
-* Pull Requests revisados y aprobados por la otra integrante del equipo.
-* Se resolvió un conflicto de merge en `App.jsx`, conservando el trabajo de la Sesión 7 e integrando los hooks.
