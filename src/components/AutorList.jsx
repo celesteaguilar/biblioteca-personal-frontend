@@ -1,8 +1,8 @@
-import { fetchMock } from "../services/mock";
+import { fetchApi } from "../services/api";
 import { useFetch } from "../hooks/useFetch";
 
 function AutorList() {
-  const { data: autores, loading, error, recargar } = useFetch(fetchMock, "autores");
+  const { data: autores, loading, error, recargar } = useFetch(fetchApi, "autores");
 
   if (loading) return <p>Cargando autores...</p>;
 
