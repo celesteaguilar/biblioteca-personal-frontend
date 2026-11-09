@@ -16,10 +16,11 @@ Este frontend consume la API REST desarrollada en Django:
 
 ```bash
 npm install
+cp .env.example .env
 npm run dev
 ```
 
-Abrir `http://localhost:5173` en el navegador. Por ahora el frontend usa datos simulados con `fetchMock`; la conexión con la API real se hará en la Sesión 11.
+Abrir `http://localhost:5173` en el navegador. El archivo `.env` define `VITE_API_URL` (por defecto `http://127.0.0.1:8000/api`). Para ver la lista de autores el backend debe estar corriendo (ver el README del backend). La lista de libros todavía usa datos simulados con `fetchMock`.
 
 ## Sesión 2 - Estructura Inicial
 
@@ -77,3 +78,12 @@ Abrir `http://localhost:5173` en el navegador. Por ahora el frontend usa datos s
 * `App` ahora obtiene los libros con `useFetch` en lugar de `useState` y `useEffect` manuales.
 * `FormularioLibro` ahora usa `useForm` en lugar de un `useState` por campo.
 * Se eliminaron los componentes duplicados `LibroList` y `LibroForm`, que habían quedado sin uso.
+
+## Sesión 11 - API conectada al frontend
+
+* Nuevo `src/services/api.js` con `fetchApi(recurso)`, que pide `GET /<recurso>/` a la API de Django usando `axios`. Tiene la misma forma que `fetchMock`, así que funciona con `useFetch` sin modificar el hook.
+* La URL base de la API se toma de la variable de entorno `VITE_API_URL` (archivo `.env`; la plantilla es `.env.example`) y nunca está escrita en el código. `.env` no se sube al repositorio.
+* `AutorList` ahora consume el endpoint real `GET /api/autores/` en lugar de `fetchMock`.
+* Estados de carga y error visibles: `useFetch` entrega `loading` y `error`; `fetchApi` convierte los errores de red o del servidor en mensajes legibles y `AutorList` los muestra con un botón "Reintentar".
+* La lista de libros sigue usando `fetchMock` (agregar un libro y marcarlo como leído son cambios locales) hasta que el backend tenga el CRUD de libros, previsto para la Sesión 13.
+* Se agregó la dependencia `axios` como cliente HTTP.
